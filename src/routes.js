@@ -77,4 +77,23 @@ export const routes = [
       return res.writeHead(404).end("task não encontrada");
     },
   },
+  {
+    path: buildRoutePath("/tasks/:id/complete"),
+    method: "PATCH",
+    handler: (req, res) => {
+      const { id } = req.params;
+      const task = database.select("tasks").find((task) => task.id === id);
+
+      if (task) {
+        task.completed_at
+          ? (task.completed_at = null)
+          : (task.completed_at = new Date());
+        task.updated_at = new Date();
+        database.update("tasks", id, task);
+        return res.writeHead(200).end(JSON.stringify(task));
+      }
+
+      return res.writeHead(404).end("task não encontrada");
+    },
+  },
 ];
