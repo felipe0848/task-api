@@ -9,7 +9,11 @@ export const routes = [
     path: buildRoutePath("/tasks"),
     method: "GET",
     handler: (req, res) => {
-      const tasks = database.select("tasks");
+      const { search } = req.query;
+      const tasks = database.select(
+        "tasks",
+        search ? { title: search, description: search } : null
+      );
       return res.writeHead(200).end(JSON.stringify(tasks));
     },
   },
@@ -30,7 +34,7 @@ export const routes = [
 
         database.insert("tasks", task);
 
-        return res.writeHead(201).end(`tarefa ${title} criada!`);
+        return res.writeHead(201).end(`tarefa criada! ${JSON.stringify(task)}`);
       }
 
       return res
