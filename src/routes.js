@@ -62,4 +62,19 @@ export const routes = [
       return res.writeHead(404).end("task não encontrada");
     },
   },
+  {
+    path: buildRoutePath("/tasks/:id"),
+    method: "DELETE",
+    handler: (req, res) => {
+      const { id } = req.params;
+      const task = database.select("tasks").find((task) => task.id === id);
+
+      if (task) {
+        database.delete("tasks", id);
+        return res.writeHead(200).end(JSON.stringify(task));
+      }
+
+      return res.writeHead(404).end("task não encontrada");
+    },
+  },
 ];
